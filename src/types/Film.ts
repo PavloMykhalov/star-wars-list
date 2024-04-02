@@ -1,0 +1,16 @@
+export type Film = {
+  title: string,
+  episodeId: number,
+  openingCrawl: string,
+  director: string,
+  producer: string,
+  releaseDate: string,
+  characters: number[],
+  platens: number[],
+  starships: number[],
+  vehicles: number[],
+  species: number[],
+  created: string,
+  edited: string,
+  url: string,
+}

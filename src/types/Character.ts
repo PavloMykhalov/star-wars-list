@@ -1,0 +1,18 @@
+export type Character = {
+  name: string,
+  height: string,
+  mass: string,
+  hairColor: string,
+  skinColor: string,
+  eyeColor: string,
+  birthYear: string,
+  gender: string,
+  homeworld: number,
+  films: number[],
+  species: number[],
+  vehicles: number[],
+  starships: number [],
+  created: string,
+  edited: string,
+  url: string,
+}
