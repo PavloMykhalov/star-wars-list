@@ -16,7 +16,7 @@ The Star Wars Characters App allows users to retrieve a list of Star Wars charac
 - Clone the repository:
 `git clone <repository-url>`
 - Navigate to the project directory:
-`cd star-wars-characters-app`
+`cd star-wars-list`
 - Install dependencies using Turbo Repo:
 `turbo install`
 - Start the development server:
