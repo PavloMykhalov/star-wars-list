@@ -14,15 +14,30 @@ export default function Home() {
       bgImage={bg.src}
       w="100vw"
       h="100vh"
-      bgPosition='15%'
-      bgSize="700px"
+      bgPosition={{ base: "50% 5%", "2xl": "15%" }}
+      bgSize={{ base: "500px", "2xl": "700px" }}
       bgRepeat="no-repeat"
     >
-      <Box alignSelf="flex-end">
-        <Text as="h1" textColor="white" fontSize="xx-large" mr="15%" mb="20px">
+      <Box
+        alignSelf={{ base: "center", "2xl": "flex-end" }}
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        flexDirection={"column"}
+        mx={{ base: "50px", md: 0 }}
+        textAlign="center"
+      >
+        <Text as="h1" textColor="white" fontSize="xx-large" mr={{ "2xl": "15%" }} mb="20px">
           Explore detail information about your favourite hero
         </Text>
-        <Button bgColor={"#ffe81f"} fontSize="xx-large" w="200px" h="75px" _hover={{ bg: "yellow.200" }}>
+        <Button
+          bgColor={"#ffe81f"}
+          fontSize="xx-large"
+          w="200px"
+          h="75px"
+          _hover={{ bg: "yellow.200" }}
+          mr={{ "2xl": "15%" }}
+        >
           <Link href='/characters'>
             Get started
           </Link>

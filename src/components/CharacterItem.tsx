@@ -18,8 +18,8 @@ export default function CharacterItem({ character, openModal }: Props) {
         borderColor="grey"
         borderStyle="solid"
         borderRadius={10}
-        height={40}
-        width={40}
+        height={{ base: "100px", md: "100px", xl: 40 }}
+        width={{ base: "150px", md: "200px", xl: 40 }}
         bg="yellow"
         cursor="pointer"
         _hover={{ color: 'white', transform: "scale(1.1)" }}
