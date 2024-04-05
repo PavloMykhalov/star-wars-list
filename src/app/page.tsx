@@ -22,7 +22,7 @@ export default function Home() {
         <Text as="h1" textColor="white" fontSize="xx-large" mr="15%" mb="20px">
           Explore detail information about your favourite hero
         </Text>
-        <Button bgColor={"#ffe81f"} fontSize="xx-large" w="200px" h="75px">
+        <Button bgColor={"#ffe81f"} fontSize="xx-large" w="200px" h="75px" _hover={{ bg: "yellow.200" }}>
           <Link href='/characters'>
             Get started
           </Link>
