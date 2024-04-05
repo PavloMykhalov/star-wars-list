@@ -16,6 +16,10 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
+    "types": [
+      "jest",
+      "node"
+    ],
     "plugins": [
       {
         "name": "next"
@@ -32,8 +36,13 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "src/__tests__/CharacterItem.test.jsx"
-, "src/__tests__/CharacterModal.test.jsx"  ],
+    "src/__tests__/CharacterItem.test.jsx",
+    "src/__tests__/CharacterModal.test.jsx",
+    "src/__tests__/Pagination.test.jsx",
+    "src/__tests__/CharactersList.test.jsx",
+    "src/__tests__/CharactersPage.test.jsx",
+    "src/__tests__/HomePage.test.jsx",
+  ],
   "exclude": [
     "node_modules"
   ]
