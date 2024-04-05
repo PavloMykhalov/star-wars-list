@@ -14,7 +14,7 @@ export default function Home() {
       bgImage={bg.src}
       w="100vw"
       h="100vh"
-      bgPosition={{ base: "50% 5%", "2xl": "15%" }}
+      bgPosition={{ base: "50% 2%", "2xl": "15%" }}
       bgSize={{ base: "500px", "2xl": "700px" }}
       bgRepeat="no-repeat"
     >
@@ -26,6 +26,7 @@ export default function Home() {
         flexDirection={"column"}
         mx={{ base: "50px", md: 0 }}
         textAlign="center"
+        mb={{ base: "-250px", lg: "-200px", "2xl": 0 }}
       >
         <Text as="h1" textColor="white" fontSize="xx-large" mr={{ "2xl": "15%" }} mb="20px">
           Explore detail information about your favourite hero
