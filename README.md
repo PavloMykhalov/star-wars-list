@@ -32,5 +32,6 @@ Open your browser and visit http://localhost:3000.
 ### Testing
 Jest is used for unit and integration testing. To run tests, use the following command:
 `npm run test` or `npm run test:watch`
-Contributing
+
+### Contributing
 Contributions are welcome! Feel free to open issues or pull requests for any improvements or new features you'd like to see added to the project.
