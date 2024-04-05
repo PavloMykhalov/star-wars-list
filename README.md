@@ -1,10 +1,10 @@
-#Star Wars Characters App
+# Star Wars Characters App
 This project is a web application built with Next.js, Chakra UI, React Flow, and Axios. Jest is used for testing, and Turbo Repo is utilized for managing dependencies.
 
-##Description
+## Description
 The Star Wars Characters App allows users to retrieve a list of Star Wars characters, navigate through pages of characters, and view additional information about each character. When a character is clicked, a modal window opens displaying a graph showing the character's relationships, along with information about the films the character appeared in and the starships they piloted.
 
-###Technologies Used
+### Technologies Used
 - Next.js
 - Chakra UI
 - React Flow: A library for building interactive node-based graphs.
