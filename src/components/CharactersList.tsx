@@ -27,10 +27,10 @@ export default function CharactersList({ characters }: Props) {
   return (
     <>
       <List
-        w={{ base: "450px", md: "768px", lg: "992px" }}
+        w={{ base: "450px", md: "450px", lg: "900px" }}
         h="100%"
         textAlign="center"
-        mb={{ base: "150px", md: "150px", "2xl": "100px" }}
+        mb={{ base: "150px", md: "100px", "2xl": "100px" }}
         display="flex"
         flexWrap="wrap"
         justifyContent="center"
