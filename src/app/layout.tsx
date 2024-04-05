@@ -21,9 +21,12 @@ export default function RootLayout({
       <body
         className={roboto.className}
         style={{
+          margin: 0,
+          padding: 0,
           maxWidth: "100vw",
           minHeight: "100vh",
-          background: "linear-gradient(to bottom, #141e30, #243b55)"
+          background: "linear-gradient(to bottom, #141e30, #243b55)",
+          backgroundRepeat: "no-repeat",
         }}
       >
         <Providers>

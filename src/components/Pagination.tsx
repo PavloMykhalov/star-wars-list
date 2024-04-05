@@ -1,6 +1,8 @@
 import { getNumber } from "@/helpers/getNumbers";
-import { Box, Button, ButtonGroup, Image } from "@chakra-ui/react";
+import { Box, Button, ButtonGroup, Image, useMediaQuery } from "@chakra-ui/react";
 import buttonIcon from '/public/images/aircraft.png';
+
+const SMALL_SCREEN_BREAKPOINT = "40em";
 
 type Props = {
   currentPage: number,
@@ -19,19 +21,22 @@ export default function Pagination({
 }: Props) {
   //pages for creating button group
   const pages = getNumber(totalPages);
+  const [isSmallScreen] = useMediaQuery(`(max-width: ${SMALL_SCREEN_BREAKPOINT})`);
 
   return (
     <Box
       display="flex"
       alignItems="center"
       position="fixed"
-      bottom={{ base: "150px", md: "50px", xl: "100px", "2xl": "200px" }}
+      mx="50px"
+      bottom={{ base: "50px", md: "150px", xl: "150px" }}
     >
       <Button
         onClick={handlePrevPage}
         disabled={currentPage === 1}
         _active={{ bg: "yellow" }}
         _hover={{ bg: "yellow.200" }}
+        mr={{ base: "200px", md: 0 }}
       >
         <Image
           src={buttonIcon.src}
@@ -42,19 +47,21 @@ export default function Pagination({
         />
       </Button>
 
-      <ButtonGroup mx={5}>
-        {pages.map((pageNumber) => (
-          <Button
-            key={pageNumber}
-            isActive={pageNumber === currentPage}
-            onClick={() => onPageChange(pageNumber)}
-            _active={{ bg: "yellow" }}
-            _hover={{ bg: "yellow.200" }}
-          >
-            {pageNumber}
-          </Button>
-        ))}
-      </ButtonGroup>
+      {!isSmallScreen && (
+        <ButtonGroup mx={5}>
+          {pages.map((pageNumber) => (
+            <Button
+              key={pageNumber}
+              isActive={pageNumber === currentPage}
+              onClick={() => onPageChange(pageNumber)}
+              _active={{ bg: "yellow" }}
+              _hover={{ bg: "yellow.200" }}
+            >
+              {pageNumber}
+            </Button>
+          ))}
+        </ButtonGroup>
+      )}
 
       <Button
         onClick={handleNextPage}
