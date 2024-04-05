@@ -1,3 +1,4 @@
+//function for making an array from number for pagination
 export function getNumber(num: number): number[] {
   const numbers = [];
 

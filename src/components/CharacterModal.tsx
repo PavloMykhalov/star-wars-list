@@ -2,7 +2,7 @@ import ReactFlow, { Background, MiniMap, Controls, ReactFlowProvider, Background
 import { getCharacterFilms } from "@/api/films";
 import { getCharacterStarships } from "@/api/starships";
 import { Character } from "@/types/Character";
-import { Box, List, ListItem, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
+import { Box, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 
 type Props = {
@@ -16,6 +16,7 @@ export default function CharacterModal({ character, isOpen, onClose }: Props) {
   const [starships, setStarships] = useState<string[]>([]);
   const [nodes, setNodes] = useState<any[]>([]);
   const [edges, setEdges] = useState<any[]>([]);
+  const [characterNodePosition, setCharacterNodePosition] = useState<[number, number]>([1, 1]);
 
   // fetching titles for starships and films
   useEffect(() => {
@@ -35,7 +36,7 @@ export default function CharacterModal({ character, isOpen, onClose }: Props) {
     fetch();
   }, [character]);
 
-  // creating nodes and edges 
+  // creating nodes and edges
   useEffect(() => {
     if (character) {
       // define position for character node
@@ -55,7 +56,6 @@ export default function CharacterModal({ character, isOpen, onClose }: Props) {
         id: character.name,
         data: { label: character.name },
         position: { x: characterX, y: 100 },
-        type: 'default'
       };
 
       // define positions for films nodes
@@ -63,7 +63,6 @@ export default function CharacterModal({ character, isOpen, onClose }: Props) {
         id: `film-${index}`,
         data: { label: film },
         position: { x: (index + 1) * 200 + 100, y: 300 },
-        type: 'film'
       }));
 
       // define positions for ships nodes
@@ -71,7 +70,6 @@ export default function CharacterModal({ character, isOpen, onClose }: Props) {
         id: `ship-${index}`,
         data: { label: ship },
         position: { x: (index + 1) * 200 + 100, y: 500 },
-        type: 'ship'
       }));
 
       // define connections between character and films
@@ -93,6 +91,7 @@ export default function CharacterModal({ character, isOpen, onClose }: Props) {
       // saving nodes and edges to states
       setNodes([characterNode, ...filmNodes, ...shipNodes]);
       setEdges([...filmEdges, ...shipEdges]);
+      setCharacterNodePosition([characterX, 100]);
     }
   }, [character, films, starships]);
 
@@ -100,28 +99,24 @@ export default function CharacterModal({ character, isOpen, onClose }: Props) {
     <Modal
       isOpen={isOpen}
       onClose={onClose}
-      size="xl"
+      size="xxl"
       isCentered
       motionPreset="scale"
     >
       <ModalOverlay />
-      <ModalContent>
-        <ModalHeader>{character?.name}</ModalHeader>
-        <ModalCloseButton />
+      <ModalContent bgColor={'black'} style={{ border: '2px solid yellow' }} mx={10}>
+        <ModalHeader color={'yellow'}>{character?.name}</ModalHeader>
+        <ModalCloseButton color="yellow" _hover={{ backgroundColor: 'gray.400', scale: 1.2 }} />
         <ModalBody>
           <ReactFlowProvider>
             <ReactFlow
               nodes={nodes}
               edges={edges}
               style={{ width: '100%', height: '500px' }}
+              fitView={true}
+              fitViewOptions={{ includeHiddenNodes: true }}
             >
-              <Background color="#888" variant={BackgroundVariant.Dots} />
-              <MiniMap nodeColor={(n: any) => {
-                if (n.type === 'film') return 'blue';
-                if (n.type === 'ship') return 'red';
-                if (n.type === 'default') return '#FFCC00';
-                return '#eee';
-              }} />
+              <Background color="black" variant={BackgroundVariant.Dots} />
               <Controls />
             </ReactFlow>
           </ReactFlowProvider>

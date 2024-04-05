@@ -1,6 +1,6 @@
 import { getNumber } from "@/helpers/getNumbers";
-import { Box, Button, ButtonGroup, NumberDecrementStepperProps } from "@chakra-ui/react";
-import { useRouter } from "next/router";
+import { Box, Button, ButtonGroup, Image } from "@chakra-ui/react";
+import buttonIcon from '/public/images/aircraft.png';
 
 type Props = {
   currentPage: number,
@@ -17,15 +17,29 @@ export default function Pagination({
   handleNextPage,
   onPageChange,
 }: Props) {
+  //pages for creating button group
   const pages = getNumber(totalPages);
 
   return (
-    <Box>
+    <Box
+      display="flex"
+      alignItems="center"
+      position="fixed"
+      bottom={{ base: "150px", "2xl": "250px" }}
+    >
       <Button
         onClick={handlePrevPage}
         disabled={currentPage === 1}
+        _active={{ bg: "yellow" }}
+        _hover={{ bg: "yellow.200" }}
       >
-        Prev
+        <Image
+          src={buttonIcon.src}
+          w={10}
+          h={10}
+          alt="Previous page button"
+          transform="scaleX(-1)"
+        />
       </Button>
 
       <ButtonGroup mx={5}>
@@ -34,6 +48,8 @@ export default function Pagination({
             key={pageNumber}
             isActive={pageNumber === currentPage}
             onClick={() => onPageChange(pageNumber)}
+            _active={{ bg: "yellow" }}
+            _hover={{ bg: "yellow.200" }}
           >
             {pageNumber}
           </Button>
@@ -43,8 +59,15 @@ export default function Pagination({
       <Button
         onClick={handleNextPage}
         disabled={currentPage === totalPages}
+        _active={{ bg: "yellow" }}
+        _hover={{ bg: "yellow.200" }}
       >
-        Next
+        <Image
+          src={buttonIcon.src}
+          w={10}
+          h={10}
+          alt="Next page button"
+        />
       </Button>
     </Box>
   );
