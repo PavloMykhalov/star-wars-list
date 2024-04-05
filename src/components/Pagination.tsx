@@ -25,7 +25,7 @@ export default function Pagination({
       display="flex"
       alignItems="center"
       position="fixed"
-      bottom={{ base: "150px", "2xl": "250px" }}
+      bottom={{ base: "150px", md: "50px", xl: "100px", "2xl": "200px" }}
     >
       <Button
         onClick={handlePrevPage}
