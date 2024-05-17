@@ -1,7 +1,12 @@
-import { Spinner } from "@chakra-ui/react";
+import { CircularProgress } from "@mui/material";
 
 export default function Loading() {
   return (
-    <Spinner size="xl" position="absolute" />
+    <CircularProgress 
+      size="xl" 
+      sx={{
+        position: "absolute",
+      }}
+    />
   );
 }

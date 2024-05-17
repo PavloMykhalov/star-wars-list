@@ -2,8 +2,10 @@ import ReactFlow, { Background, MiniMap, Controls, ReactFlowProvider, Background
 import { getCharacterFilms } from "@/api/films";
 import { getCharacterStarships } from "@/api/starships";
 import { Character } from "@/types/Character";
-import { Box, Modal, ModalBody, ModalCloseButton, ModalContent, ModalHeader, ModalOverlay } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import useGraphBuilder, { GraphData } from '@/hooks/useNodes';
+import { Box, Grow, IconButton, Modal } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 type Props = {
   character: Character | null,
@@ -14,105 +16,91 @@ type Props = {
 export default function CharacterModal({ character, isOpen, onClose }: Props) {
   const [films, setFilms] = useState<string[]>([]);
   const [starships, setStarships] = useState<string[]>([]);
-  const [nodes, setNodes] = useState<any[]>([]);
-  const [edges, setEdges] = useState<any[]>([]);
-  const [characterNodePosition, setCharacterNodePosition] = useState<[number, number]>([1, 1]);
+  const { buildGraphData } = useGraphBuilder();
+  const [graphData, setGraphData] = useState<GraphData | null>(null);
+
+  const fetchData = useCallback(async () => {
+    try {
+      if (character) {
+        const [filmTitles, starshipsTitles] = await Promise.all([
+          getCharacterFilms(character.films),
+          getCharacterStarships(character.starships)
+        ]);
+        setFilms(filmTitles);
+        setStarships(starshipsTitles);
+      }
+    } catch (error) {
+      console.error('Error loading:', error);
+    }
+  }, [character]);
+
+  const fetchGraphData = useCallback(async () => {
+    if (character) {
+      const filmTitles = await getCharacterFilms(character.films);
+      const starshipsTitles = await getCharacterStarships(character.starships);
+      const data = await buildGraphData(character, filmTitles, starshipsTitles);
+      if (data) {
+        setGraphData(prevData => ({ ...prevData, ...data }));
+      }
+    }
+  }, [character, buildGraphData]);
 
   // fetching titles for starships and films
   useEffect(() => {
-    const fetch = async () => {
-      try {
-        if (character) {
-          const filmTitles = await getCharacterFilms(character.films);
-          setFilms(filmTitles);
-          const starshipsTitles = await getCharacterStarships(character.starships);
-          setStarships(starshipsTitles);
-        }
-      } catch (error) {
-        console.error('Error loading:', error);
-      }
-    };
-
-    fetch();
-  }, [character]);
+    fetchData();
+  }, [fetchData]);
 
   // creating nodes and edges
   useEffect(() => {
-    if (character) {
-      // define position for character node
-      const filmCount = films.length;
-      const filmXCoordinates = films.map((film, index) => (index + 1) * 200 + 100);
-      let characterX;
+    fetchGraphData();
+  }, [fetchGraphData]);
 
-      if (filmCount === 1) {
-        characterX = filmXCoordinates[0];
-      } else if (filmCount % 2 !== 0) {
-        characterX = filmXCoordinates[Math.floor(filmCount / 2)];
-      } else {
-        characterX = filmXCoordinates[Math.floor(filmCount / 2)] - 100;
-      }
+  if (!isOpen || !graphData) {
+    return null;
+  }
 
-      const characterNode = {
-        id: character.name,
-        data: { label: character.name },
-        position: { x: characterX, y: 100 },
-      };
-
-      // define positions for films nodes
-      const filmNodes = films.map((film, index) => ({
-        id: `film-${index}`,
-        data: { label: film },
-        position: { x: (index + 1) * 200 + 100, y: 300 },
-      }));
-
-      // define positions for ships nodes
-      const shipNodes = starships.map((ship, index) => ({
-        id: `ship-${index}`,
-        data: { label: ship },
-        position: { x: (index + 1) * 200 + 100, y: 500 },
-      }));
-
-      // define connections between character and films
-      const filmEdges = films.map((film, index) => ({
-        id: `edge-${index}`,
-        source: character.name,
-        target: `film-${index}`,
-        animated: true,
-      }));
-
-      // define connections between film and ships
-      const shipEdges = starships.map((ship, index) => ({
-        id: `edge-ship-${index}`,
-        source: `film-${index}`,
-        target: `ship-${index}`,
-        animated: true,
-      }));
-
-      // saving nodes and edges to states
-      setNodes([characterNode, ...filmNodes, ...shipNodes]);
-      setEdges([...filmEdges, ...shipEdges]);
-      setCharacterNodePosition([characterX, 100]);
-    }
-  }, [character, films, starships]);
+  const { nodes, edges, characterNodePosition } = graphData;
 
   return (
     <Modal
-      isOpen={isOpen}
-      onClose={onClose}
-      size="xxl"
-      isCentered
-      motionPreset="scale"
+      open={isOpen}
+      aria-labelledby="character-modal-title"
+      aria-describedby="character-modal-description"
     >
-      <ModalOverlay />
-      <ModalContent bgColor={'black'} style={{ border: '2px solid yellow' }} mx={10}>
-        <ModalHeader color={'yellow'}>{character?.name}</ModalHeader>
-        <ModalCloseButton color="yellow" _hover={{ backgroundColor: 'gray.400', scale: 1.2 }} />
-        <ModalBody>
+      <Grow in timeout={500}>
+        <Box
+          sx={{
+            position: 'absolute',
+            top: '5%',
+            left: '5%',
+            width: '80%',
+            bgcolor: 'black',
+            boxShadow: 24,
+            border: "1px solid yellow",
+            borderRadius: "50px",
+            p: 4,
+          }}
+        >
           <ReactFlowProvider>
+            <IconButton
+              aria-label="delete"
+              onClick={onClose}
+              sx={{
+                position: "relative",
+                left: "98%",
+                color: "yellow",
+                transition: "all 0.3s",
+                "&:hover": {
+                  backgroundColor: "grey",
+                },
+              }}
+            >
+              <CloseIcon />
+            </IconButton>
             <ReactFlow
               nodes={nodes}
               edges={edges}
-              style={{ width: '100%', height: '500px' }}
+              style={{ width: '100%', height: '700px' }}
               fitView={true}
               fitViewOptions={{ includeHiddenNodes: true }}
             >
@@ -120,8 +108,8 @@ export default function CharacterModal({ character, isOpen, onClose }: Props) {
               <Controls />
             </ReactFlow>
           </ReactFlowProvider>
-        </ModalBody>
-      </ModalContent>
-    </Modal >
+        </Box>
+      </Grow>
+    </Modal>
   );
 }

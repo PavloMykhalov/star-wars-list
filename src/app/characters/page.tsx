@@ -2,26 +2,52 @@
 
 import { getCharacters } from "@/api/characters";
 import CharactersList from "@/components/CharactersList";
-import CharactersListSkeleton from "@/components/CharactersListSkeleton";
-import Pagination from "@/components/Pagination";
+import ListSkeleton from "@/components/ListSkeleton";
 import { Character } from "@/types/Character";
-import { Flex, Spinner } from "@chakra-ui/react";
-import { useRouter } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { Box } from "@mui/material";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import buttonIcon from '/public/images/aircraft.png';
+import PaginationComponent from "@/components/Pagination";
 
-export default function CharactersPage({
-  searchParams
-}: {
-  searchParams?: {
-    query?: string,
+const paginationItemStyles = {
+  base: {
+    backgroundColor: "white",
+    width: '40px',
+    height: '40px',
+    '&:hover': {
+      backgroundColor: "orange",
+    },
+    '&.Mui-selected': {
+      backgroundColor: "orange",
+      '&:hover': {
+        backgroundColor: "orange",
+      },
+      '&:active': {
+        backgroundColor: "orange",
+      }
+    },
+  },
+  previousNext: {
+    width: "70px",
+    backgroundImage: `url(${buttonIcon.src})`,
+    backgroundSize: 'contain',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+  },
+  previous: {
+    transform: 'rotate(180deg)',
   }
-}) {
+};
+
+export default function CharactersPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const initalPage = parseInt(searchParams.get('page') || '1', 10);
   const [characters, setCharacters] = useState<Character[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(initalPage);
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  const query = searchParams?.query || '';
 
   //state for the first load of the page for pagination
   const [isFirstLoad, setIsFirstLoad] = useState(true);
@@ -56,54 +82,29 @@ export default function CharactersPage({
     router.push(`?page=${page}`);
   }
 
-  //handle click on previous page button
-  const handlePreviousPage = () => {
-    const prevPage = currentPage - 1;
-
-    if (prevPage >= 1) {
-      setCurrentPage(prevPage);
-      router.push(`?page=${prevPage}`)
-    }
-  };
-
-  //handle click on next page button
-  const handleNextPage = () => {
-    const nextPage = currentPage + 1;
-
-    if (nextPage <= totalPages) {
-      setCurrentPage(nextPage);
-      router.push(`?page=${nextPage}`)
-    }
-  };
-
   return (
-    <Flex
-      as="main"
-      direction="column"
-      justify="center"
+    <Box
+      component="main"
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
       alignItems="center"
-      w="100vw"
-      h="100vh"
-      px={100}
-      py={200}
+      width="100vw"
+      height="100vh"
     >
       {isLoading ? (
-        <Spinner color="white" size="xl" role="status" />
+        <ListSkeleton />
       ) : (
-        <Suspense fallback={<CharactersListSkeleton />}>
-          <CharactersList characters={characters} />
-        </Suspense>
+        <CharactersList characters={characters} />
       )}
 
       {!isFirstLoad &&
-        <Pagination
-          currentPage={currentPage}
+        <PaginationComponent
           totalPages={totalPages}
-          onPageChange={handlePageChangeOnClick}
-          handleNextPage={handleNextPage}
-          handlePrevPage={handlePreviousPage}
+          currentPage={currentPage}
+          handleClick={handlePageChangeOnClick}
         />
       }
-    </Flex>
+    </Box>
   );
 }

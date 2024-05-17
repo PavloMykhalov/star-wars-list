@@ -1,5 +1,5 @@
 import { Character } from "@/types/Character";
-import { charactersAPI } from ".";
+import apiClient from ".";
 
 // Interface for the response containing characters and count
 interface CharactersResponse {
@@ -11,7 +11,7 @@ interface CharactersResponse {
 export async function getCharacters(page: number = 1): Promise<CharactersResponse> {
   try {
     // Making a GET request to the characters API with the specified page
-    const response = await charactersAPI.get(`/?page=${page}`);
+    const response = await apiClient.get(`people/?page=${page}`);
     
     // Returning an object with characters and count extracted from the response data
     return {

@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { Providers } from "./providers";
 import { Roboto } from 'next/font/google';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v13-appRouter';
 
 export const metadata: Metadata = {
   title: "Star Wars",
@@ -23,15 +23,15 @@ export default function RootLayout({
         style={{
           margin: 0,
           padding: 0,
-          maxWidth: "100vw",
-          minHeight: "100vh",
-          background: "linear-gradient(to bottom, #141e30, #243b55)",
+          width: "100vw",
+          height: "100vh",
+          background: "#1D1F21",
           backgroundRepeat: "no-repeat",
         }}
       >
-        <Providers>
+        <AppRouterCacheProvider>
           {children}
-        </Providers>
+        </AppRouterCacheProvider>
       </body>
     </html>
   );

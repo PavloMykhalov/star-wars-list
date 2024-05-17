@@ -1,81 +1,73 @@
-import { getNumber } from "@/helpers/getNumbers";
-import { Box, Button, ButtonGroup, Image, useMediaQuery } from "@chakra-ui/react";
 import buttonIcon from '/public/images/aircraft.png';
+import { Pagination, PaginationItem, useMediaQuery } from "@mui/material";
 
 const SMALL_SCREEN_BREAKPOINT = "40em";
 
 type Props = {
   currentPage: number,
   totalPages: number,
-  handlePrevPage: () => void,
-  handleNextPage: () => void,
-  onPageChange: (page: number) => void,
+  handleClick: (page: number) => void;
 }
 
-export default function Pagination({
+const paginationItemStyles = {
+  base: {
+    backgroundColor: "white",
+    width: '40px',
+    height: '40px',
+    marginBottom: { xs: "50px" },
+    '&:hover': {
+      backgroundColor: "yellow",
+    },
+    '&.Mui-selected': {
+      backgroundColor: "yellow",
+      color: "black",
+      '&:hover': {
+        backgroundColor: "yellow",
+      },
+      '&:active': {
+        backgroundColor: "yellow.900",
+      }
+    },
+  },
+  previousNext: {
+    width: "70px",
+    backgroundImage: `url(${buttonIcon.src})`,
+    backgroundSize: 'contain',
+    backgroundRepeat: 'no-repeat',
+    backgroundPosition: 'center',
+  },
+  previous: {
+    transform: 'rotate(180deg)',
+  }
+};
+
+export default function PaginationComponent({
   currentPage,
   totalPages,
-  handlePrevPage,
-  handleNextPage,
-  onPageChange,
+  handleClick,
 }: Props) {
-  //pages for creating button group
-  const pages = getNumber(totalPages);
-  const [isSmallScreen] = useMediaQuery(`(max-width: ${SMALL_SCREEN_BREAKPOINT})`);
+  const isSmallScreen = useMediaQuery(`(max-width: ${SMALL_SCREEN_BREAKPOINT})`);
 
   return (
-    <Box
-      display="flex"
-      alignItems="center"
-      position="fixed"
-      mx="50px"
-      bottom={{ base: "250px", md: "50px", lg: "250px" }}
-    >
-      <Button
-        onClick={handlePrevPage}
-        disabled={currentPage === 1}
-        _active={{ bg: "yellow" }}
-        _hover={{ bg: "yellow.200" }}
-        mr={{ base: "200px", md: 0 }}
-      >
-        <Image
-          src={buttonIcon.src}
-          w={10}
-          h={10}
-          alt="Previous page button"
-          transform="scaleX(-1)"
+    <Pagination
+      count={totalPages}
+      page={currentPage}
+      siblingCount={isSmallScreen ? 0 : totalPages}
+      onChange={(_: any, page: number) => handleClick(page)}
+      color="primary"
+      shape="rounded"
+      size="medium"
+      renderItem={(item) => (
+        <PaginationItem
+          component="button"
+          {...item}
+          sx={{
+            ...paginationItemStyles.base,
+            ...(item.type === 'previous' || item.type === 'next' ? paginationItemStyles.previousNext : {}),
+            ...(item.type === 'previous' && paginationItemStyles.previous),
+          }}
         />
-      </Button>
-
-      {!isSmallScreen && (
-        <ButtonGroup mx={5}>
-          {pages.map((pageNumber) => (
-            <Button
-              key={pageNumber}
-              isActive={pageNumber === currentPage}
-              onClick={() => onPageChange(pageNumber)}
-              _active={{ bg: "yellow" }}
-              _hover={{ bg: "yellow.200" }}
-            >
-              {pageNumber}
-            </Button>
-          ))}
-        </ButtonGroup>
       )}
-
-      <Button
-        onClick={handleNextPage}
-        disabled={currentPage === totalPages}
-        _active={{ bg: "yellow" }}
-        _hover={{ bg: "yellow.200" }}
-      >
-        <Image
-          src={buttonIcon.src}
-          w={10}
-          h={10}
-          alt="Next page button"
-        />
-      </Button>
-    </Box>
+    />
   );
 }

@@ -1,48 +1,99 @@
 import { Character } from "@/types/Character";
-import { List, useBoolean } from "@chakra-ui/react";
 import CharacterItem from "./CharacterItem";
-import { useState } from "react";
 import CharacterModal from "./CharacterModal";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { Fade, Grow, List } from "@mui/material";
+import { useRouter } from "next/navigation";
 
 type Props = {
   characters: Character[],
 }
 
+// Function to add a query parameter
+const addQueryParam = (searchParams: URLSearchParams, key: string, value: string) => {
+  const newSearchParams = new URLSearchParams(searchParams.toString());
+  newSearchParams.set(key, value);
+  return newSearchParams;
+}
+
+// Function to remove a query parameter
+const removeQueryParam = (searchParams: URLSearchParams, key: string) => {
+  const newSearchParams = new URLSearchParams(searchParams.toString());
+  newSearchParams.delete(key);
+  return newSearchParams;
+}
+
+const normalizeName = (name: string) => {
+  return name.toLowerCase().replace(/\s+/g, '-');
+};
+
 export default function CharactersList({ characters }: Props) {
-  const [isModalOpen, setIsModalOpen] = useBoolean();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCharacter, setSelectedCharacter] = useState<Character | null>(null);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const characterName = searchParams.get('character');
+    if (characterName) {
+      const normalizedCharacterName = normalizeName(characterName);
+      const character = characters.find(c => normalizeName(c.name) === normalizedCharacterName);
+      if (character) {
+        setSelectedCharacter(character);
+        setIsModalOpen(true);
+      }
+    }
+  }, [searchParams, characters]);
+
 
   //function for handling opening modal
   const handleOpeningModal = (character: Character) => {
     setSelectedCharacter(character);
-    setIsModalOpen.on();
+    setIsModalOpen(true);
+
+    const newSearchParams = addQueryParam(searchParams, 'character', normalizeName(character.name));
+    router.push(`?${newSearchParams.toString()}`);
   }
 
-  //function for handling closing modal
+  // function for handling closing modal
   const handleClosingModal = () => {
+    const newSearchParams = removeQueryParam(searchParams, 'character');
+    router.replace(`?${newSearchParams.toString()}`);
     setSelectedCharacter(null);
-    setIsModalOpen.off();
+    setIsModalOpen(false);
   }
 
   return (
     <>
       <List
-        w={{ base: "450px", md: "450px", lg: "900px" }}
-        h="100%"
-        textAlign="center"
-        mb={{ base: "150px", md: "100px", "2xl": "100px" }}
-        display="flex"
-        flexWrap="wrap"
-        justifyContent="center"
-        columnGap="10px"
-        rowGap="10px"
+        sx={{
+          width: { xs: "100vw", md: "450px", lg: "900px" },
+          textAlign: "center",
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          alignItems: "center",
+          columnGap: "20px",
+          rowGap: "20px",
+          mb: "50px",
+          marginTop: { xs: "50px" },
+        }}
       >
-        {Array.isArray(characters) && characters.map(character => (
-          <CharacterItem
-            character={character}
-            openModal={handleOpeningModal}
+        {Array.isArray(characters) && characters.map((character, index) => (
+          <Grow
             key={`${character.name}-${character.birthYear}`}
-          />
+            in
+            timeout={500 + index * 100}
+            style={{ transformOrigin: '0 0 0' }}
+          >
+            <div>
+              <CharacterItem
+                character={character}
+                openModal={handleOpeningModal}
+              />
+            </div>
+          </Grow>
         ))}
       </List>
 

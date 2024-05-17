@@ -1,4 +1,4 @@
-import { starshipsAPI } from ".";
+import apiClient from ".";
 
 // Function to get the names of starships associated with a character
 export async function getCharacterStarships(characterStarshipsIds: number[]): Promise<string[]> {
@@ -7,7 +7,7 @@ export async function getCharacterStarships(characterStarshipsIds: number[]): Pr
 
     for (const starshipId of characterStarshipsIds) {
       // Making a GET request to the starships API with the specific starship ID
-      const response = await starshipsAPI.get(`/${starshipId}`);
+      const response = await apiClient.get(`starships/${starshipId}`);
       
       starshipsTitles.push(response.data.name);
     }
