@@ -4,7 +4,7 @@ import { getCharacters } from "@/api/characters";
 import CharactersList from "@/components/CharactersList";
 import ListSkeleton from "@/components/ListSkeleton";
 import { Character } from "@/types/Character";
-import { Box } from "@mui/material";
+import { Box, Slide } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import buttonIcon from '/public/images/aircraft.png';
@@ -49,9 +49,6 @@ export default function CharactersPage() {
   const [totalPages, setTotalPages] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
 
-  //state for the first load of the page for pagination
-  const [isFirstLoad, setIsFirstLoad] = useState(true);
-
   //function for fetching characters from API
   const fetchCharacters = async (page: number) => {
     try {
@@ -72,7 +69,6 @@ export default function CharactersPage() {
       })
       .finally(() => {
         setIsLoading(false);
-        setIsFirstLoad(false);
       });
   }, [currentPage]);
 
@@ -92,19 +88,25 @@ export default function CharactersPage() {
       width="100vw"
       height="100vh"
     >
-      {isLoading ? (
-        <ListSkeleton />
-      ) : (
-        <CharactersList characters={characters} />
-      )}
+      <Slide direction="left" in timeout={1500}>
+        <div>
+          {isLoading ? (
+            <ListSkeleton />
+          ) : (
+            <CharactersList characters={characters} />
+          )}
+        </div>
+      </Slide>
 
-      {!isFirstLoad &&
-        <PaginationComponent
-          totalPages={totalPages}
-          currentPage={currentPage}
-          handleClick={handlePageChangeOnClick}
-        />
-      }
+      <Slide direction="right" in timeout={1500}>
+        <div>
+          <PaginationComponent
+            totalPages={totalPages}
+            currentPage={currentPage}
+            handleClick={handlePageChangeOnClick}
+          />
+        </div>
+      </Slide>
     </Box>
   );
 }

@@ -72,7 +72,7 @@ export default function CharacterModal({ character, isOpen, onClose }: Props) {
           sx={{
             position: 'absolute',
             top: '5%',
-            left: '5%',
+            left: '10%',
             width: '80%',
             bgcolor: 'black',
             boxShadow: 24,
