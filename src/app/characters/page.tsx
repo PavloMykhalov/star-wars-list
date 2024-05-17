@@ -100,11 +100,13 @@ export default function CharactersPage() {
 
       <Slide direction="right" in timeout={1500}>
         <div>
-          <PaginationComponent
-            totalPages={totalPages}
-            currentPage={currentPage}
-            handleClick={handlePageChangeOnClick}
-          />
+          {!isLoading &&
+            <PaginationComponent
+              totalPages={totalPages}
+              currentPage={currentPage}
+              handleClick={handlePageChangeOnClick}
+            />
+          }
         </div>
       </Slide>
     </Box>

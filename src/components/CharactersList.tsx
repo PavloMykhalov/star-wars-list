@@ -68,7 +68,7 @@ export default function CharactersList({ characters }: Props) {
     <>
       <List
         sx={{
-          width: { xs: "100vw", md: "450px", lg: "900px" },
+          width: { xs: "550px", md: "850px", lg: "900px" },
           textAlign: "center",
           display: "flex",
           flexWrap: "wrap",
